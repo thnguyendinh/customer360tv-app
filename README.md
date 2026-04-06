@@ -1,26 +1,16 @@
 # Customer360 TV App
 
-Customer360 TV App is an end-to-end customer analytics project built for television usage data.  
-The system ingests raw log data, processes it in Databricks, serves curated datasets through Supabase, and delivers a Customer 360 web application with Next.js.
+Customer360 TV App là đồ án xây dựng hệ thống phân tích khách hàng end-to-end cho dữ liệu log sử dụng dịch vụ TV.
 
-## Live Demo
+## Mục tiêu
 
-**Production URL:**  
-`https://customer360tv-app.vercel.app`
+- ingest dữ liệu log thô
+- ETL dữ liệu trên Databricks theo mô hình Bronze → Silver → Gold
+- đưa dữ liệu Gold sang Supabase làm serving layer
+- xây dựng ứng dụng Customer 360 bằng Next.js
+- deploy online bằng Vercel
 
-## Overview
-
-This project was developed as a Customer 360 MVP for analyzing customer behavior and television channel usage.
-
-The main objectives are:
-
-- ingest raw TV usage logs
-- transform data using a medallion architecture
-- build customer-centric analytics tables
-- serve the processed data through Supabase
-- visualize insights in a web application deployed on Vercel
-
-## Architecture
+## Kiến trúc
 
 ```text
 Raw JSON Logs
@@ -29,7 +19,7 @@ Databricks
 (Bronze → Silver → Gold)
    ↓
 Supabase
-(serving layer / application database)
+(serving database)
    ↓
 Next.js + Vercel
-(Customer 360 web application)
+(Customer 360 web app)
