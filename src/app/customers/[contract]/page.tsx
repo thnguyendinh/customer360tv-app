@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import {
   ResponsiveContainer,
   BarChart,
@@ -34,15 +35,10 @@ type AppUsage = {
   last_active_date: string;
 };
 
-type SegmentRow = {
-  segment_name: string;
-};
+export default function CustomerDetailPage() {
+  const params = useParams<{ contract: string }>();
+  const contract = Array.isArray(params.contract) ? params.contract[0] : params.contract;
 
-export default function CustomerDetailPage({
-  params,
-}: {
-  params: { contract: string };
-}) {
   const [customer, setCustomer] = useState<Customer360 | null>(null);
   const [appUsage, setAppUsage] = useState<AppUsage[]>([]);
   const [segment, setSegment] = useState<string>("");
@@ -50,38 +46,42 @@ export default function CustomerDetailPage({
 
   useEffect(() => {
     async function fetchDetail() {
-      const { data: customerData, error: customerError } = await supabase
+      if (!contract) return;
+
+      const { data: customerRows, error: customerError } = await supabase
         .from("customer_360")
         .select("*")
-        .eq("contract", params.contract)
-        .limit(1)
-        .single();
+        .eq("contract", contract)
+        .order("total_watch_duration", { ascending: false });
 
       const { data: usageData, error: usageError } = await supabase
         .from("customer_app_usage")
         .select("*")
-        .eq("contract", params.contract)
+        .eq("contract", contract)
         .order("total_watch_duration", { ascending: false });
 
-      const { data: segmentData, error: segmentError } = await supabase
+      const { data: segmentRows, error: segmentError } = await supabase
         .from("customer_segments")
         .select("segment_name")
-        .eq("contract", params.contract)
-        .limit(1)
-        .single();
+        .eq("contract", contract);
 
       if (customerError) console.error("customer detail error:", customerError);
       if (usageError) console.error("app usage error:", usageError);
       if (segmentError) console.error("segment error:", segmentError);
 
-      setCustomer((customerData ?? null) as Customer360 | null);
+      const selectedCustomer =
+        customerRows && customerRows.length > 0 ? customerRows[0] : null;
+
+      setCustomer(selectedCustomer as Customer360 | null);
       setAppUsage((usageData ?? []) as AppUsage[]);
-      setSegment(segmentData?.segment_name ?? "");
+      setSegment(
+        segmentRows && segmentRows.length > 0 ? segmentRows[0].segment_name : ""
+      );
       setLoading(false);
     }
 
     fetchDetail();
-  }, [params.contract]);
+  }, [contract]);
 
   const chartData = useMemo(() => {
     return appUsage.slice(0, 8).map((row) => ({

@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Customer360 TV App
 
-## Getting Started
+Customer360 TV App is an end-to-end customer analytics project built for television usage data.  
+The system ingests raw log data, processes it in Databricks, serves curated datasets through Supabase, and delivers a Customer 360 web application with Next.js.
 
-First, run the development server:
+## Live Demo
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**Production URL:**  
+`https://customer360tv-app.vercel.app`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Overview
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This project was developed as a Customer 360 MVP for analyzing customer behavior and television channel usage.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The main objectives are:
 
-## Learn More
+- ingest raw TV usage logs
+- transform data using a medallion architecture
+- build customer-centric analytics tables
+- serve the processed data through Supabase
+- visualize insights in a web application deployed on Vercel
 
-To learn more about Next.js, take a look at the following resources:
+## Architecture
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+Raw JSON Logs
+   ↓
+Databricks
+(Bronze → Silver → Gold)
+   ↓
+Supabase
+(serving layer / application database)
+   ↓
+Next.js + Vercel
+(Customer 360 web application)
